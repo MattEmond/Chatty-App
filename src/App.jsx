@@ -50,4 +50,3 @@ componentDidMount() {
   }
 }
 export default App;
-Test
