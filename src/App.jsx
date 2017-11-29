@@ -24,6 +24,8 @@ class App extends Component {
         }
       ]
     }
+    this.sendMessage = this.sendMessage.bind(this)
+    this.isEnter = this.isEnter.bind(this)
   }
 
   isEnter(event) {
@@ -68,7 +70,7 @@ class App extends Component {
         <a href="/" className="navbar-brand">Chatty</a>
       </nav>
       <MessageList message={this.state.messages}/>
-      <ChatBar user={this.state.currentUser.name} isEnter={this.isEnter.bind(this)}/>
+      <ChatBar user={this.state.currentUser.name} isEnter={this.isEnter}/>
     </div>);
   }
 }
