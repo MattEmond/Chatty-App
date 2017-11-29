@@ -45,13 +45,14 @@ class App extends Component {
     };
     const messages = this.state.messages.concat(newMessage);
     this.setState({messages: messages});
+    this.socket.send(JSON.stringify(newMessage));
   }
 
   componentDidMount() {
     this.socket.onopen = (event) => {
       console.log("Connected to server");
-      this.socket.send("Connected to server");
     };
+
     console.log("componentDidMount <App />");
     setTimeout(() => {
       console.log("Simulating incoming message");
