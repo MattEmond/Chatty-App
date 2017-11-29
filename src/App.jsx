@@ -8,20 +8,8 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentUser: {
-        name: "Matt"
-      }, // optional. if currentUser is not defined, it means the user is Anonymous
-      messages: [
-        {
-          id: 1,
-          username: "Bob",
-          content: "Has anyone seen my marbles?"
-        }, {
-          id: 2,
-          username: "Anonymous",
-          content: "No, I think you lost them. You lost your marbles Bob. You lost them for good."
-        }
-      ]
+      currentUser: {name: "Bob"},
+      messages: [] // messages coming from the server will be stored here as they arrive
     }
     this.sendMessage = this.sendMessage.bind(this)
     this.isEnter = this.isEnter.bind(this)
@@ -43,8 +31,6 @@ class App extends Component {
       username: user,
       content: message
     };
-    const messages = this.state.messages.concat(newMessage);
-    this.setState({messages: messages});
     this.socket.send(JSON.stringify(newMessage));
   }
 
@@ -52,6 +38,16 @@ class App extends Component {
     this.socket.onopen = (event) => {
       console.log("Connected to server");
     };
+
+    this.socket.onmessage = (event) => {
+      let parsedEvent = JSON.parse(event.data)
+      console.log(parsedEvent);
+      this.setState((oldState) => {
+        return {messages: [...oldState.messages, parsedEvent]}
+      })
+
+
+}
 
     console.log("componentDidMount <App />");
     setTimeout(() => {
