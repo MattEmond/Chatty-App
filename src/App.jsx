@@ -5,7 +5,6 @@ import ChatBar from './ChatBar.jsx';
 import MessageList from './MessageList.jsx';
 
 class App extends Component {
-
   constructor(props) {
     super(props);
     this.state = {
@@ -33,8 +32,8 @@ class App extends Component {
     let user = this.state.currentUser.name
     if (event.key === "Enter") {
       this.sendMessage(message, user)
+    }
   }
-}
 
   sendMessage(message, user) {
     const newMessage = {
@@ -45,7 +44,6 @@ class App extends Component {
     const messages = this.state.messages.concat(newMessage);
     this.setState({messages: messages});
   }
-
 
   componentDidMount() {
     console.log("componentDidMount <App />");
