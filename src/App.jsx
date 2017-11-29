@@ -8,12 +8,28 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentUser: {name: "Bob"},
+      currentUser: {name: ""},
       messages: [] // messages coming from the server will be stored here as they arrive
     }
-    this.sendMessage = this.sendMessage.bind(this)
-    this.isEnter = this.isEnter.bind(this)
+    this.sendMessage = this.sendMessage.bind(this);
+    this.isEnter = this.isEnter.bind(this);
     this.socket = new WebSocket("ws://localhost:3001");
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+
+
+  handleChange(event) {
+    console.log(`Event is : ${event.target.value}`)
+      let currentUser = {name: event.target.value}
+      this.setState({currentUser: currentUser});
+    
+  }
+
+  handleSubmit(event) {
+    alert('A name was submitted: ' + this.state.value);
+    event.preventDefault();
   }
 
 
@@ -41,7 +57,7 @@ class App extends Component {
 
     this.socket.onmessage = (event) => {
       let parsedEvent = JSON.parse(event.data)
-      console.log(parsedEvent);
+      console.log(event.data);
       this.setState((oldState) => {
         return {messages: [...oldState.messages, parsedEvent]}
       })
@@ -71,7 +87,7 @@ class App extends Component {
         <a href="/" className="navbar-brand">Chatty</a>
       </nav>
       <MessageList message={this.state.messages}/>
-      <ChatBar user={this.state.currentUser.name} isEnter={this.isEnter}/>
+      <ChatBar user={this.state.currentUser} isEnter={this.isEnter} handleChange={this.handleChange}/>
     </div>);
   }
 }
