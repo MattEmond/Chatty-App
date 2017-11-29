@@ -25,7 +25,9 @@ class App extends Component {
     }
     this.sendMessage = this.sendMessage.bind(this)
     this.isEnter = this.isEnter.bind(this)
+    this.socket = new WebSocket("ws://localhost:3001");
   }
+
 
   isEnter(event) {
     let message = event.target.value
@@ -46,6 +48,10 @@ class App extends Component {
   }
 
   componentDidMount() {
+    this.socket.onopen = (event) => {
+      console.log("Connected to server");
+      this.socket.send("Connected to server");
+    };
     console.log("componentDidMount <App />");
     setTimeout(() => {
       console.log("Simulating incoming message");
