@@ -1,3 +1,5 @@
+const uniqid = require('uniqid');
+
 import React, {Component} from 'react';
 import ChatBar from './ChatBar.jsx';
 import MessageList from './MessageList.jsx';
@@ -27,17 +29,14 @@ class App extends Component {
   isEnter(event) {
     let message = event.target.value
     let user = this.state.currentUser.name
-    console.log(`Event key: ${event.key}`)
-    console.log(`Message: ${message}`)
-    console.log(`User: ${user}`)
-  if (event.key === "Enter") {
-    this.sendMessage(message, user)
+    if (event.key === "Enter") {
+      this.sendMessage(message, user)
   }
 }
 
   sendMessage(message, user) {
     const newMessage = {
-      //id: 4,
+      id: uniqid(),
       username: user,
       content: message
     };
