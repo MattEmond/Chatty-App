@@ -10,7 +10,7 @@ class App extends Component {
     super(props);
     this.state = {
       currentUser: {
-        name: "Bob"
+        name: "Matt"
       }, // optional. if currentUser is not defined, it means the user is Anonymous
       messages: [
         {
