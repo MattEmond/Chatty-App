@@ -5,8 +5,8 @@
 Chatty allows users to communicate with each other without having to register accounts. It uses React, as well as Webpack and Babel.
 
 
-!["Main Page"](#)
-!["Multiple Users"](#)
+!["Main Page"](https://github.com/MattEmond/Chatty-App/blob/master/public/images/main-page.png?raw=true)
+!["Multiple Users"](https://github.com/MattEmond/Chatty-App/blob/master/public/images/multi-user.png?raw=true)
 
 
 
