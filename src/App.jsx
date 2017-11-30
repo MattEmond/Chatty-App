@@ -120,7 +120,7 @@ class App extends Component {
     return (<div>
       <nav className="navbar">
         <a href="/" className="navbar-brand">Chatty</a>
-        <h2 className="counter" >Users Online: { this.state.usersOnline } </h2>
+        <h2 className="counter" >{ this.state.usersOnline } Users Online </h2>
       </nav>
       <MessageList message={this.state.messages}/>
       <ChatBar user={this.state.tempUser} isEnter={this.isEnter} isUsernameEnter={this.isUsernameEnter} handleChange={this.handleChange}/>
