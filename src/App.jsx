@@ -8,23 +8,26 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentUser: {name: ""},
+      tempUser: {
+        name: ""
+      },
+      currentUser: {
+        name: "Anon"
+      },
       messages: [] // messages coming from the server will be stored here as they arrive
     }
     this.sendMessage = this.sendMessage.bind(this);
     this.isEnter = this.isEnter.bind(this);
+    this.isUsernameEnter = this.isUsernameEnter.bind(this);
     this.socket = new WebSocket("ws://localhost:3001");
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-
-
   handleChange(event) {
     console.log(`Event is : ${event.target.value}`)
-      let currentUser = {name: event.target.value}
-      this.setState({currentUser: currentUser});
-
+      let tempUser = {name: event.target.value}
+      this.setState({tempUser: tempUser});
   }
 
   handleSubmit(event) {
@@ -41,11 +44,25 @@ class App extends Component {
     }
   }
 
+  isUsernameEnter(event) {
+    // let message = event.target.value
+    // let user = this.state.currentUser.name
+
+    if (event.key === "Enter") {
+      const oldUser = this.state.currentUser;
+      const newUser = this.state.tempUser;
+      this.postNotification(newUser, oldUser);
+      this.setState({ currentUser: this.state.tempUser })
+      // this.sendMessage("incomingNotification", message, user)
+    }
+  }
+
   sendMessage(message, user) {
     const newMessage = {
       id: uniqid(),
       username: user,
-      content: message
+      content: message,
+      type: "incomingMessage"
     };
     this.socket.send(JSON.stringify(newMessage));
   }
@@ -55,7 +72,7 @@ class App extends Component {
       id: uniqid(),
       newUser:newUser,
       oldUser:oldUser,
-      type:"incomingNotification",
+      type: "incomingNotification"
     }
     this.socket.send(JSON.stringify(userChange))
 }
@@ -66,8 +83,6 @@ class App extends Component {
     };
 
     this.socket.onmessage = (event) => {
-      // Socket event data is encoded as a JSON string
-      // Line below turns it into an obj
       let data = JSON.parse(event.data)
       switch(data.type) {
         case "incomingMessage" :
@@ -76,15 +91,11 @@ class App extends Component {
         })
           break;
         case "incomingNotification" :
-        console.log('Made it to incomingNotification')
-        console.log(messages)
-        let content = data.oldUser + " changed name to " + data.newUser;
+        let content = data.oldUser.name + " changed name to " + data.newUser.name;
+        console.log(content)
         let notification = {type: data.type, content: content, key: data.id};
         let messages = this.state.messages.concat(notification);
         this.setState({messages: messages})
-        //this.setState((oldState) => {
-          //return {messages: [...oldState.messages, data]}
-        //})
           break;
         default:
         // show an error in the console if the message type is unknown
@@ -114,8 +125,8 @@ class App extends Component {
       <nav className="navbar">
         <a href="/" className="navbar-brand">Chatty</a>
       </nav>
-      <MessageList message={this.state.messages} incomingNotification={this.incomingNotification}/>
-      <ChatBar user={this.state.currentUser} isEnter={this.isEnter} handleChange={this.handleChange}/>
+      <MessageList message={this.state.messages}/>
+      <ChatBar user={this.state.tempUser} isEnter={this.isEnter} isUsernameEnter={this.isUsernameEnter} handleChange={this.handleChange}/>
     </div>);
   }
 }
