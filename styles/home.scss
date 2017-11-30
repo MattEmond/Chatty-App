@@ -76,6 +76,10 @@ body {
      top: 0;
    }
 
+   .counter {
+     float: inherit;
+   }
+
    .navbar-brand {
      color: inherit;
      display: block;
