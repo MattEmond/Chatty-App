@@ -27,9 +27,8 @@ class App extends Component {
   }
 
   handleChange(event) {
-    console.log(`Event is : ${event.target.value}`)
-      let tempUser = {name: event.target.value}
-      this.setState({tempUser: tempUser});
+    let tempUser = {name: event.target.value}
+    this.setState({tempUser: tempUser});
   }
 
   handleSubmit(event) {
@@ -77,21 +76,18 @@ class App extends Component {
 
   componentDidMount() {
     this.socket.onopen = (event) => {
-      console.log(event)
       console.log("Connected to server");
     };
     this.socket.onmessage = (event) => {
       let data = JSON.parse(event.data)
       switch(data.type) {
         case "incomingMessage" :
-          console.log(data)
           this.setState((oldState) => {
             return {messages: [...oldState.messages, data]}
           })
           break;
         case "incomingNotification" :
           let content = data.oldUser.name + " changed name to " + data.newUser.name;
-          console.log(content)
           let notification = {type: data.type, content: content, key: data.id};
           let messages = this.state.messages.concat(notification);
           this.setState({messages: messages})
@@ -100,30 +96,14 @@ class App extends Component {
           this.setState({usersOnline: data.userNumber})
           break;
         case "colour":
-          console.log(data);
           this.setState({ colour: data.colour })
           break;
         default:
-        // show an error in the console if the message type is unknown
+          // show an error in the console if the message type is unknown
           throw new Error("Unknown event type " + data.type)
+        }
       }
     }
-
-    console.log("componentDidMount <App />");
-    setTimeout(() => {
-      console.log("Simulating incoming message");
-      // Add a new message to the list of messages in the data store
-      const newMessage = {
-        id: 3,
-        username: "Michelle",
-        content: "Hello there!"
-      };
-      const messages = this.state.messages.concat(newMessage)
-      // Update the state of the app component.
-      // Calling setState will trigger a call to render() in App and all child components.
-      this.setState({messages: messages})
-    }, 3000);
-  }
 
   render() {
     return (<div>

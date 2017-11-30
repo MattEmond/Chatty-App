@@ -9,7 +9,6 @@ class MessageList extends Component {
         return <Message key={message.id} username={message.username} content={message.content} colour={message.colour}/>
       }
       if (message.type === "incomingNotification") {
-        console.log(message)
         return <Notification key={message.key} message={message.content}/>
       }
     })
