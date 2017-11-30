@@ -14,6 +14,11 @@ const server = express()
 // Create the WebSockets server
 const wss = new SocketServer({ server });
 let usersOnline = {userNumber: 0, type: "userCount"};
+let userColour = {colour: "", type:"userColour"};
+let colours = ["red", "blue", "green", "yellow", "purple", "black", "pink", "orange"];
+let randomColour = () => {
+  return colours[Math.floor((Math.random()*7))];
+}
 
 // Broadcast data to all users
 wss.broadcast = function broadcast(data) {
@@ -30,14 +35,22 @@ wss.broadcast = function broadcast(data) {
 wss.on('connection', (ws) => {
   console.log('Client connected');
   usersOnline.userNumber++;
+  userColour.colour = randomColour();
+  console.log(userColour.colour)
   console.log(usersOnline);
-wss.broadcast(JSON.stringify(usersOnline));
+  ws.send(JSON.stringify(
+    {
+      type: "colour",
+      colour: randomColour()
+    }
+  ))
+  wss.broadcast(JSON.stringify(usersOnline));
 
-test
 
   ws.on('message', function incoming(message) {
     let messageParse = JSON.parse(message)
     console.log(`User ${messageParse.username} said ${messageParse.content}`);
+    console.log(messageParse)
     wss.broadcast(message)
   });
 

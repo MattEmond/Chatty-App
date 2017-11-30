@@ -6,7 +6,7 @@ class MessageList extends Component {
   render() {
     const messages = this.props.message.map(message => {
       if (message.type === "incomingMessage") {
-        return <Message key={message.id} username={message.username} content={message.content}/>
+        return <Message key={message.id} username={message.username} content={message.content} colour={message.colour}/>
       }
       if (message.type === "incomingNotification") {
         console.log(message)

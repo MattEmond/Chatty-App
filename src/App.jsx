@@ -14,8 +14,10 @@ class App extends Component {
       currentUser: {
         name: "Anon"
       },
-      messages: [] // messages coming from the server will be stored here as they arrive
+      messages: [],
+      colour: "black"
     }
+
     this.sendMessage = this.sendMessage.bind(this);
     this.isEnter = this.isEnter.bind(this);
     this.isUsernameEnter = this.isUsernameEnter.bind(this);
@@ -57,7 +59,8 @@ class App extends Component {
       id: uniqid(),
       username: user,
       content: message,
-      type: "incomingMessage"
+      type: "incomingMessage",
+      colour: this.state.colour
     };
     this.socket.send(JSON.stringify(newMessage));
   }
@@ -74,25 +77,31 @@ class App extends Component {
 
   componentDidMount() {
     this.socket.onopen = (event) => {
+      console.log(event)
       console.log("Connected to server");
     };
     this.socket.onmessage = (event) => {
       let data = JSON.parse(event.data)
       switch(data.type) {
         case "incomingMessage" :
+          console.log(data)
           this.setState((oldState) => {
             return {messages: [...oldState.messages, data]}
-        })
+          })
           break;
         case "incomingNotification" :
-        let content = data.oldUser.name + " changed name to " + data.newUser.name;
-        console.log(content)
-        let notification = {type: data.type, content: content, key: data.id};
-        let messages = this.state.messages.concat(notification);
-        this.setState({messages: messages})
+          let content = data.oldUser.name + " changed name to " + data.newUser.name;
+          console.log(content)
+          let notification = {type: data.type, content: content, key: data.id};
+          let messages = this.state.messages.concat(notification);
+          this.setState({messages: messages})
           break;
         case "userCount" :
-        this.setState({usersOnline: data.userNumber})
+          this.setState({usersOnline: data.userNumber})
+          break;
+        case "colour":
+          console.log(data);
+          this.setState({ colour: data.colour })
           break;
         default:
         // show an error in the console if the message type is unknown
