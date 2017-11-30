@@ -15,9 +15,9 @@ const server = express()
 const wss = new SocketServer({ server });
 let usersOnline = {userNumber: 0, type: "userCount"};
 let userColour = {colour: "", type:"userColour"};
-let colours = ["red", "blue", "green", "yellow", "purple", "black", "pink", "orange"];
+let colours = ["red", "blue", "green", "purple", "black", "pink", "orange"];
 let randomColour = () => {
-  return colours[Math.floor((Math.random()*7))];
+  return colours[Math.floor((Math.random()*6))];
 }
 
 // Broadcast data to all users
