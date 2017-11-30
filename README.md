@@ -1,11 +1,17 @@
-React Boilerplate
-=====================
+# Chatty App
 
-A minimal and light dev environment for ReactJS.
+## Description
 
-### Usage
+Chatty allows users to communicate with each other without having to register accounts. It uses React, as well as Webpack and Babel.
 
-Clone the boilerplate and create your own git repo.
+
+!["Main Page"](#)
+!["Multiple Users"](#)
+
+
+
+
+## Getting Started
 
 ```
 git clone git@github.com:lighthouse-labs/react-simple-boilerplate.git
