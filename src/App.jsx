@@ -24,7 +24,7 @@ class App extends Component {
     console.log(`Event is : ${event.target.value}`)
       let currentUser = {name: event.target.value}
       this.setState({currentUser: currentUser});
-    
+
   }
 
   handleSubmit(event) {
@@ -50,20 +50,48 @@ class App extends Component {
     this.socket.send(JSON.stringify(newMessage));
   }
 
+  postNotification(newUser, oldUser) {
+    const userChange = {
+      id: uniqid(),
+      newUser:newUser,
+      oldUser:oldUser,
+      type:"incomingNotification",
+    }
+    this.socket.send(JSON.stringify(userChange))
+}
+
   componentDidMount() {
     this.socket.onopen = (event) => {
       console.log("Connected to server");
     };
 
     this.socket.onmessage = (event) => {
-      let parsedEvent = JSON.parse(event.data)
-      console.log(event.data);
-      this.setState((oldState) => {
-        return {messages: [...oldState.messages, parsedEvent]}
-      })
+      // Socket event data is encoded as a JSON string
+      // Line below turns it into an obj
+      let data = JSON.parse(event.data)
+      switch(data.type) {
+        case "incomingMessage" :
+          this.setState((oldState) => {
+            return {messages: [...oldState.messages, data]}
+        })
+          break;
+        case "incomingNotification" :
+        console.log('Made it to incomingNotification')
+        console.log(messages)
+        let content = data.oldUser + " changed name to " + data.newUser;
+        let notification = {type: data.type, content: content, key: data.id};
+        let messages = this.state.messages.concat(notification);
+        this.setState({messages: messages})
+        //this.setState((oldState) => {
+          //return {messages: [...oldState.messages, data]}
+        //})
+          break;
+        default:
+        // show an error in the console if the message type is unknown
+          throw new Error("Unknown event type " + data.type)
+      }
+    }
 
-
-}
 
     console.log("componentDidMount <App />");
     setTimeout(() => {
@@ -86,7 +114,7 @@ class App extends Component {
       <nav className="navbar">
         <a href="/" className="navbar-brand">Chatty</a>
       </nav>
-      <MessageList message={this.state.messages}/>
+      <MessageList message={this.state.messages} incomingNotification={this.incomingNotification}/>
       <ChatBar user={this.state.currentUser} isEnter={this.isEnter} handleChange={this.handleChange}/>
     </div>);
   }
