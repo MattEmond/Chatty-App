@@ -35,7 +35,6 @@ class App extends Component {
     event.preventDefault();
   }
 
-
   isEnter(event) {
     let message = event.target.value
     let user = this.state.currentUser.name
@@ -45,15 +44,11 @@ class App extends Component {
   }
 
   isUsernameEnter(event) {
-    // let message = event.target.value
-    // let user = this.state.currentUser.name
-
     if (event.key === "Enter") {
       const oldUser = this.state.currentUser;
       const newUser = this.state.tempUser;
       this.postNotification(newUser, oldUser);
       this.setState({ currentUser: this.state.tempUser })
-      // this.sendMessage("incomingNotification", message, user)
     }
   }
 
@@ -81,7 +76,6 @@ class App extends Component {
     this.socket.onopen = (event) => {
       console.log("Connected to server");
     };
-
     this.socket.onmessage = (event) => {
       let data = JSON.parse(event.data)
       switch(data.type) {
@@ -102,7 +96,6 @@ class App extends Component {
           throw new Error("Unknown event type " + data.type)
       }
     }
-
 
     console.log("componentDidMount <App />");
     setTimeout(() => {
